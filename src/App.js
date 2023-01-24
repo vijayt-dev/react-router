@@ -1,23 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
-
+import {Routes,Route} from "react-router-dom"
+import Admin from "./Admin";
+import Featured from "./Component/Featured";
+import Home from "./Component/Home";
+import NavBar from "./Component/NavBar";
+import New from "./Component/New";
+import NoMatch from "./Component/NoMatch";
+import Order from "./Component/Order";
+import OrderSummary from "./Component/OrderSummary";
+import Product from "./Component/Product";
+import UserDetails from "./UserDetails";
+import Users from "./Users";
+import React from 'react'
+const LazyAbout =  React.lazy(() => import("./Component/About"))
 function App() {
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NavBar />
+      <Order />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="about" element={
+        <React.Suspense fallback="Loading...">
+        <LazyAbout />
+        </React.Suspense>
+        } />
+        <Route path="product" element={<Product />}>
+          <Route index element={<Featured />} />
+          <Route path="featured" element={<Featured />} />
+          <Route path="new" element={<New />} />
+        </Route>
+        <Route path="user" element={<Users />}>
+        <Route path=":userID" element={<UserDetails />} />
+        <Route path="admin" element={<Admin />} />
+        </Route>
+
+        <Route path="order-summary" element={<OrderSummary />} />
+        <Route path="*" element={<NoMatch />} />
+      </Routes>
     </div>
   );
 }
